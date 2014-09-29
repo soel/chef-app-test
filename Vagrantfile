@@ -20,12 +20,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      chef.add_recipe "nginx"
      chef.add_recipe "php-env::php55"
      chef.add_recipe "ruby-env"
+     chef.add_recipe "nodejs"
   #   chef.add_role "web"
   #
   #   # You may also specify custom JSON attributes:
      chef.json = {
        nginx: {
-         env: ["php"]
+         env: ["php", "ruby"]
        }
      }
   end
