@@ -45,3 +45,22 @@ template "my.cnf" do
   mode   "0644"
   notifies :restart, "service[mysqld]"
 end
+
+template "daily_slave_backup.sh" do
+  path "/home/#{node['mysql']['user']}/daily_slave_backup.sh"
+  source "daily_slave_backup.sh.erb"
+  owner node['mysql']['user']
+  group node['mysql']['group']
+  mode "0700"
+  only_if { node['hostname'] == "dbslave" }
+end
+
+cron "exec daily_backup" do
+  command "/home/#{node['mysql']['user']}/daily_slave_backup.sh"
+  hour "4"
+  minute "30"
+  day "*"
+  user "root"
+  action :create
+  only_if { node['hostname'] == "dbslave" }
+end
